@@ -1,0 +1,36 @@
+#!/usr/bin/python
+import xmlrpclib
+
+SPACEWALK_URL = "http://spacewalk_ip.corp.org/rpc/api"
+SPACEWALK_LOGIN = "REDACTED"
+SPACEWALK_PASSWORD = "REDACTED"
+
+client = xmlrpclib.Server(SPACEWALK_URL, verbose=0)
+
+key = client.auth.login(SPACEWALK_LOGIN, SPACEWALK_PASSWORD)
+
+# This will tell us which users have access to the spacewalk web interface"
+users = client.user.list_users(key)
+for user in users:
+   print user.get('login')
+   
+# What type of data structure is being returned.
+print type(clients)
+
+# print the id of the registered systems and then print the name of the client
+for ids in clients:
+	print "id:", ids['id'], "client:", ids['name']
+
+# Show only the id of the registered systems
+systems = [d['id'] for d in clients]
+print systems
+
+# Show kernel information for each registered system
+for ids in systems:
+	print client.system.getRunningKernel(key, ids)
+  
+# Show only security erratas associated with each registered system. If the number of registered systems is huge
+# then it will take the entire screen buffer.
+for ids in systems:
+	print client.system.getRelevantErrataByType(key, ids, 'Security Advisory')
+
