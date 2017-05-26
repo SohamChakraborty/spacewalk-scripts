@@ -13,7 +13,10 @@ key = client.auth.login(SPACEWALK_LOGIN, SPACEWALK_PASSWORD)
 users = client.user.list_users(key)
 for user in users:
    print user.get('login')
-   
+
+# Reference API: http://spacewalk.redhat.com/documentation/api/2.6/handlers/SystemHandler.html#listSystems
+clients = client.system.listSystems(key)
+
 # What type of data structure is being returned.
 print type(clients)
 
@@ -26,11 +29,13 @@ systems = [d['id'] for d in clients]
 print systems
 
 # Show kernel information for each registered system
+# Reference API: http://spacewalk.redhat.com/documentation/api/2.6/handlers/SystemHandler.html#getRunningKernel
 for ids in systems:
 	print client.system.getRunningKernel(key, ids)
   
 # Show only security erratas associated with each registered system. If the number of registered systems is huge
 # then it will take the entire screen buffer.
+# Reference API: http://spacewalk.redhat.com/documentation/api/2.6/handlers/SystemHandler.html#getRelevantErrataByType
 for ids in systems:
 	print client.system.getRelevantErrataByType(key, ids, 'Security Advisory')
 
